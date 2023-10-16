@@ -16,7 +16,7 @@
 # function that plots something, and will return a matplotlib axes object.
 #
 # Any function that begins with "print_", is a function that prints something
-# and returns nothing.fc
+# and returns nothing.
 # ------------------------------------------------------------------------------
 
 
@@ -112,11 +112,7 @@ def calc_multivariate_regression(y, X, intercept=True, adj=12):
         summary[f"{col} Beta"] = betas[i]
 
     summary["Information Ratio"] = (inter / results.resid.std()) * np.sqrt(adj)
-    summary["Tracking Error"] = (
-        inter / summary["Information Ratio"] * adj
-        if intercept
-        else results.resid.std() * np.sqrt(adj)
-    )
+    summary["Tracking Error"] = results.resid.std() * np.sqrt(adj)
     return pd.DataFrame(summary, index=[y.name])
 
 
@@ -314,7 +310,8 @@ def plot_correlation_matrix(corrs, ax=None):
 
 
 def print_max_min_correlation(corrs):
-    # Correlation helper function.
+    # Correlation helper function. Prints the min/max/absolute value
+    # for the correlation matrix.
     corr_series = corrs.unstack()
     corr_series = corr_series[corr_series != 1]
 
@@ -343,10 +340,11 @@ def print_max_min_correlation(corrs):
 
 def calc_tangency_portfolio(mean_rets, cov_matrix):
     """
-    NOTE: This *does not* assume access to the risk-free rate.
+    NOTE: This *does not* assume access to the risk-free rate. Use
+        Mark's portfolio.py for tangency/GMV/etc. portfolios.
 
     Function to calculate tangency portfolio weights. Comes from the
-    formula seen in class (Week 1).
+    formula seen in class.
 
     Args:
         mean_rets: Vector of mean returns.
@@ -362,7 +360,8 @@ def calc_tangency_portfolio(mean_rets, cov_matrix):
 
 def calc_gmv_portfolio(cov_matrix):
     """
-    NOTE: This *does not* assume access to the risk-free rate.
+    NOTE: This *does not* assume access to the risk-free rate. Use
+        Mark's portfolio.py for tangency/GMV/etc. portfolios.
 
     Function to calculate the weights of the global minimum variance portfolio.
 
@@ -383,7 +382,8 @@ def calc_gmv_portfolio(cov_matrix):
 
 def calc_mv_portfolio(mean_rets, cov_matrix, target=None):
     """
-    NOTE: This *does not* assume access to the risk-free rate.
+    NOTE: This *does not* assume access to the risk-free rate. Use
+        Mark's portfolio.py for tangency/GMV/etc. portfolios.
 
     Function to calculate the weights of the mean-variance portfolio. If
     target is not specified, then the function will return the tangency portfolio.
@@ -610,4 +610,3 @@ def plot_pairplot(rets):
         ax.axvline(0, c="k", lw=1, alpha=0.7)
 
     return axes
-
