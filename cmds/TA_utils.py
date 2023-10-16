@@ -16,7 +16,7 @@
 # function that plots something, and will return a matplotlib axes object.
 #
 # Any function that begins with "print_", is a function that prints something
-# and returns nothing.
+# and returns nothing.fc
 # ------------------------------------------------------------------------------
 
 
@@ -113,7 +113,7 @@ def calc_multivariate_regression(y, X, intercept=True, adj=12):
 
     summary["Information Ratio"] = (inter / results.resid.std()) * np.sqrt(adj)
     summary["Tracking Error"] = (
-        inter / summary["Information Ratio"]
+        inter / summary["Information Ratio"] * adj
         if intercept
         else results.resid.std() * np.sqrt(adj)
     )
@@ -610,3 +610,4 @@ def plot_pairplot(rets):
         ax.axvline(0, c="k", lw=1, alpha=0.7)
 
     return axes
+
