@@ -25,7 +25,7 @@ def tangency_weights(returns,dropna=True,scale_cov=1):
 
 
 
-def MVweights(mean, cov, isexcess=True, target='TAN'):
+def MVweightsOLD(mean, cov, isexcess=True, target='TAN'):
 
     vecOnes = np.ones([len(mean)])
     
@@ -54,6 +54,44 @@ def MVweights(mean, cov, isexcess=True, target='TAN'):
 
     return wstar
         
+
+def MVweights(returns=None, mean=None, cov=None, target=None, isexcess=True):
+    if returns is not None:
+        rets = returns.copy()
+        rets.dropna(inplace=True)
+
+        mean = rets.mean()
+        cov = rets.cov()
+        
+    wtsTan = np.linalg.solve(cov,mean)
+    wtsTan /= wtsTan.sum()
+    muTan = np.inner(wtsTan,mean)
+    
+    wtsGMV = np.linalg.solve(cov,np.ones(mean.shape))
+    wtsGMV /= wtsGMV.sum()
+    muGMV = np.inner(wtsGMV,mean)
+    
+    if target == 'GMV':
+        target = muGMV
+        isexcess = False
+    elif target == 'TAN':
+        target = muTan
+    elif target is None:
+        target = muTan
+    
+    if isexcess:
+        share_tangency = target/muTan
+        wtsGMV = 0
+    else:
+        share_tangency = (target - muGMV)/(muTan-muGMV)
+    
+    wstar = share_tangency * wtsTan + (1-share_tangency) * wtsGMV
+    
+    return wstar
+
+
+
+
 
 def performanceMetrics(returns,annualization=1, quantile=.05):
     metrics = pd.DataFrame(index=returns.columns)
