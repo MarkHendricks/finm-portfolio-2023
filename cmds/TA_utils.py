@@ -74,8 +74,11 @@ def calc_univariate_regression(y, X, intercept=True, adj=12):
         if intercept
         else results.resid.std() * np.sqrt(adj)
     )
-
-    return pd.DataFrame(summary, index=[y.name])
+    
+    if isinstance(y, pd.Series):
+        return pd.DataFrame(summary, index=[y.name])
+    else:
+        return pd.DataFrame(summary, index=y.columns)
 
 def calc_multivariate_regression(y, X, intercept=True, adj=12):
     """
@@ -112,7 +115,11 @@ def calc_multivariate_regression(y, X, intercept=True, adj=12):
 
     summary["Information Ratio"] = (inter / results.resid.std()) * np.sqrt(adj)
     summary["Tracking Error"] = results.resid.std() * np.sqrt(adj)
-    return pd.DataFrame(summary, index=[y.name])
+    
+    if isinstance(y, pd.Series):
+        return pd.DataFrame(summary, index=[y.name])
+    else:
+        return pd.DataFrame(summary, index=y.columns)
 
 
 def calc_iterative_regression(y, X, intercept=True, one_to_many=False, adj=12):
