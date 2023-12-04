@@ -99,8 +99,8 @@ def calc_multivariate_regression(y, X, intercept=True, adj=12):
     results = model.fit()
     summary = dict()
 
-    inter = results.params[0] if intercept else 0
-    betas = results.params[1:] if intercept else results.params
+    inter = results.params.iloc[0] if intercept else 0
+    betas = results.params.iloc[1:] if intercept else results.params
 
     summary["Alpha"] = inter * adj
     summary["R-Squared"] = results.rsquared
